@@ -60,3 +60,21 @@ To install the Ansible Galaxy collection, run `make install`.
 An example playbook how to deploy a machine is presented in `example.yml`.
 
 It can be executed like this: `ansible-playbook -i some-host, example.yml`.
+
+For development, the easiest way to test the full flow is to set up
+a Tateru installer using the instructions on https://github.com/tateru-io/tateru-installer.
+In short the steps are as follows:
+
+```
+# Terminal 1
+$ cd tateru-installer/
+$ python3 fake-infra.py ~/.ssh/id_ed25519.pub
+
+# Terminal 2
+$ cd tateru-installer/
+$ make qemu
+
+# Terminal 3
+$ cd tateru/
+$ TATERU_SVC=http://localhost:7708/ ansible-playbook -i qemu, example.yml
+```
