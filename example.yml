@@ -1,0 +1,37 @@
+# Tateru example playbook
+#
+# Copyright 2020 Tateru Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Start the installer on the specified node.
+# This will register a new host in the "installer" group when the installer
+# has booted up and is available.
+# If you need to re-run the playbook but do not wish to reboot the node
+# you can do so by only executing the 'resume' tag.
+- hosts: all
+  gather_facts: no
+  roles:
+    - role: tateru.deploy.boot
+      vars:
+        machine: "{{ inventory_hostname }}"
+        ssh_pub_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+
+# Now we can execute operations directly on the installer live system.
+- hosts: installer
+  tags: resume
+  tasks:
+    # Example task
+  - name: Show installer distribution
+    debug:
+      msg: "Installer running on {{ ansible_distribution }} version {{ ansible_distribution_major_version }}"

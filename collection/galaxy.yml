@@ -1,0 +1,6 @@
+namespace: tateru
+name: deploy
+version: "0.0.1"
+readme: "README.md"
+authors: "Tateru Authors"
+repository: https://github.com/tateru-io/tateru
