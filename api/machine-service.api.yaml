@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
-  version: '0.0.1'
+  version: 0.0.2
   title: Tateru Machine Service API
   license:
     name: Apache 2.0
@@ -9,6 +9,8 @@ info:
 tags:
   - name: inventory
     description: Inventory scanning
+  - name: deploy
+    description: Deployment operations
 paths:
   /v1/machines:
     get:
@@ -19,8 +21,8 @@ paths:
       description: |
         Returns all currently active machine objects
       parameters:
-      - name: 'alias'
-        in: 'query'
+      - name: alias
+        in: query
         description: 'Filter on known aliases for machines (e.g. name)'
         schema:
           type: string
@@ -33,6 +35,44 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Machine'
+  /v1/installer-callback:
+    post:
+      tags:
+        - deploy
+      summary: send an installation callback to notify Tateru that an installer has booted
+      operationId: bootInstaller
+      description: |
+        When the Tateru installation software has booted it will call this endpoint to provide inventory
+        and address to be reached at. It will be provided with an SSH public key to allow as response.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                serialNumber:
+                  type: string
+                  example: XYZ1234
+                assetTag:
+                  type: string
+                  example: '00203'
+              required:
+              - uuid
+      responses:
+        '200':
+          description: the request succeeded
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CallbackResponse'
+        '404':
+          description: the requested machine was not found
+
 components:
   schemas:
     Machine:
@@ -52,7 +92,16 @@ components:
           example: '00203'
         name:
           type: string
-          example: 'VMLNX01'
+          example: VMLNX01
         managedBy:
           type: string
           example: 'http://tateru-vsphere.corp.local:7707/'
+    CallbackResponse:
+      type: object
+      required:
+        - ssh_pub_key
+      properties:
+        ssh_pub_key:
+          type: string
+          format: uuid
+          example: 'ssh-ed25519 AAA[..]AAV user@laptop'

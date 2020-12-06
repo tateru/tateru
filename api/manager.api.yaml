@@ -36,7 +36,8 @@ paths:
       summary: makes a machine boot into the Tateru installer environment
       operationId: bootInstaller
       description: |
-        Returns all currently active machine objects
+        Calling this action will cause a machine to boot into the Tateru installer
+        environment, possibly by reconfiguring bootup order and doing a network boot.
       requestBody:
         content:
           application/json:
@@ -46,7 +47,7 @@ paths:
                 ssh_pub_key:
                   description: 'The SSH public key to allow SSH access to the installer environment'
                   type: string
-                  example: ssh-ed25519 AAA[..]AAV user@laptop
+                  example: 'ssh-ed25519 AAA[..]AAV user@laptop'
               required:
               - ssh_pub_key
       parameters:

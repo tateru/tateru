@@ -15,5 +15,6 @@
 .PHONY: install
 
 install:
+	pip3 install $(PWD)
 	ansible-galaxy collection build collection/ --force
 	ansible-galaxy collection install tateru-deploy-0.0.1.tar.gz --force

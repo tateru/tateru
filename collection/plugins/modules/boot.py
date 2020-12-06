@@ -47,6 +47,7 @@ EXAMPLES = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+import tateru.client
 
 
 def run_module():
@@ -65,6 +66,8 @@ def run_module():
 
     if module.check_mode:
         module.exit_json(**result)
+
+    tateru.client.boot_installer(module.params['machine'], module.params['ssh_pub_key'])
 
     module.exit_json(**result)
 
