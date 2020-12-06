@@ -19,9 +19,9 @@ paths:
       description: |
         Returns all currently active machine objects
       parameters:
-      - name: 'name'
+      - name: 'alias'
         in: 'query'
-        description: 'Filter on machine name'
+        description: 'Filter on known aliases for machines (e.g. name)'
         schema:
           type: string
       responses:
