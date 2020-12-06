@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
+  version: '0.0.1'
+  title: Tateru Machine Service API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: inventory
+    description: Inventory scanning
+paths:
+  /v1/machines:
+    get:
+      tags:
+        - inventory
+      summary: fetches all known machines
+      operationId: fetchMachines
+      description: |
+        Returns all currently active machine objects
+      parameters:
+      - name: 'name'
+        in: 'query'
+        description: 'Filter on machine name'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: list of machine objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Machine'
+components:
+  schemas:
+    Machine:
+      type: object
+      required:
+        - uuid
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        serialNumber:
+          type: string
+          example: XYZ1234
+        assetTag:
+          type: string
+          example: '00203'
+        name:
+          type: string
+          example: 'VMLNX01'
+        managedBy:
+          type: string
+          example: 'http://tateru-vsphere.corp.local:7707/'
