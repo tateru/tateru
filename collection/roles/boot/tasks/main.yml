@@ -34,7 +34,7 @@
 
 - name: Log installer address
   debug:
-    msg: 'Installer running at {{ installer_address["address"] }}'
+    msg: 'Installer running at {{ installer_address["address"] }} port {{ installer_address["port"] }}'
 
 - name: Register installer target as a host
   tags: resume
@@ -43,4 +43,7 @@
     name: '{{ machine }}-installer'
     groups: installer
     ansible_host: '{{ installer_address["address"] }}'
+    ansible_port: '{{ installer_address["port"] }}'
+    # TODO: Change to tateru
+    ansible_user: 'root'
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

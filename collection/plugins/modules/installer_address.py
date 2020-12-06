@@ -48,6 +48,11 @@ address:
     type: str
     returned: always
     sample: '2001:0db8:85a3::8a2e:0370:7334'
+port:
+    description: The port to use to reach the installer.
+    type: int
+    returned: always
+    sample: 22
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -61,7 +66,8 @@ def run_module():
 
     result = dict(
         changed=False,
-        address='::'
+        address='',
+        port=22,
     )
     module = AnsibleModule(
         argument_spec=module_args,
@@ -71,7 +77,8 @@ def run_module():
     if module.check_mode:
         module.exit_json(**result)
 
-    result['address'] = '::1'
+    result['address'] = 'localhost'
+    result['port'] = 5555
     # TODO: Fake wait to demo flow
     time.sleep(3)
     module.exit_json(**result)
