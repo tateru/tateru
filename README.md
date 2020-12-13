@@ -1,5 +1,7 @@
 # Tateru OS deployment system
 
+![Tateru logo](https://tateru.io/tateru-web-small.png)
+
 Tateru is a collection of services that offers a framework for building Ansible-based OS
 installation playbooks to install bare-metal or virtual machines.
 
