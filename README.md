@@ -54,7 +54,7 @@ In addition to this the deployment system requires the following infrastructure 
 ## Installation
 TODO: This will need a lot of details, probably its own page.
 
-Make sure you have QEMU installed for image building
+Make sure you have Docker installed for image building and QEMU for local development.
 
 ### Debian-based distributions
 ```
