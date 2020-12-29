@@ -64,7 +64,6 @@ To install the Ansible Galaxy collection, run `make install`.
 
 
 ### MacOS
-Install QEMU for image building
 ```
 $ brew install qemu
 ```
