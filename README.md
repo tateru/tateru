@@ -52,8 +52,14 @@ In addition to this the deployment system requires the following infrastructure 
  installer software (turn-key packages provided for quick start).
 
 ## Installation
-
 TODO: This will need a lot of details, probably its own page.
+
+Make sure you have QEMU installed for image building
+
+Debian-based distributions
+```
+$ apt install qemu-system
+```
 
 To install the Ansible Galaxy collection, run `make install`.
 
