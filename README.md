@@ -56,12 +56,26 @@ TODO: This will need a lot of details, probably its own page.
 
 Make sure you have QEMU installed for image building
 
-Debian-based distributions
+### Debian-based distributions
 ```
 $ apt install qemu-system
 ```
-
 To install the Ansible Galaxy collection, run `make install`.
+
+
+### MacOS
+Install QEMU for image building
+```
+$ brew install qemu
+```
+TODO: [#6](https://github.com/tateru/tateru/issues/6) Need to run ansible in an venv as the brew installed ansible is unable to use make install to get deps in the correct path.
+```
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip3 install ansible
+```
+After this you can run `make install` to get the Ansible Galaxy collection.
+
 
 ## Usage
 
