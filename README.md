@@ -70,7 +70,7 @@ In short the steps are as follows:
 ```
 # Terminal 1
 $ cd tateru-installer/
-$ python3 fake-infra.py ~/.ssh/id_ed25519.pub
+$ python3 fake-infra.py
 
 # Terminal 2
 $ cd tateru-installer/
