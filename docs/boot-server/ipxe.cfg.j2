@@ -1,0 +1,42 @@
+#!ipxe
+
+cpair --foreground 6 --background 9 1
+cpair --foreground 7 --background 9 2
+cpair --foreground 6 --background 9 3
+
+console --picture http://{{ inventory_hostname }}/tateru/ipxe.png
+
+set ipparam BOOTIF=${netX/mac} ip=${ip}::${gateway}:${netmask}
+
+:menu
+  menu Tateru iPXE boot menu
+  item installer         Boot Tateru installer
+  item shell             iPXE shell
+  item reboot            Reboot
+  item exit              Exit iPXE
+  choose --default installer --timeout 3000 target && goto ${target}
+
+:failed
+  echo Booting failed, dropping to shell
+  goto shell
+
+:shell
+  echo Type 'exit' to get back to the menu
+  shell
+  goto menu
+
+:reboot
+  reboot
+
+:exit
+  exit
+
+:installer
+  kernel http://{{ inventory_hostname }}/tateru/arch/boot/x86_64/vmlinuz-linux
+  initrd http://{{ inventory_hostname }}/tateru/arch/boot/intel-ucode.img
+  initrd http://{{ inventory_hostname }}/tateru/arch/boot/amd-ucode.img
+  initrd http://{{ inventory_hostname }}/tateru/arch/boot/x86_64/initramfs-linux.img
+  imgargs vmlinuz-linux initrd=amd-ucode.img initrd=intel-ucode.img initrd=initramfs-linux.img cow_spacesize=768M archisobasedir=arch archiso_http_srv=http://{{ inventory_hostname }}/tateru/ verify=n ${ipparam} copytoram_size="400M" svc={{ TATERU_SVC }}
+  imgstat
+  echo Booting...
+  boot || goto failed
