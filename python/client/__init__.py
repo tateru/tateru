@@ -31,6 +31,10 @@ class NoMachineFound(Error):
     """No machine was found matching the given alias."""
 
 
+class MultipleMachinesFound(Error):
+    """Multiple machines where found matching the given alias."""
+
+
 def _machine_service():
     # TODO: Surface this through other means as well?
     svc = os.environ.get('TATERU_SVC')
@@ -47,8 +51,12 @@ def boot_installer(machine, ssh_pub_key):
         raise NoMachineFound()
     elif r.status_code != 200:
         raise UnknownError(f'The machine service returned {r.status_code}')
-    uuid = r.json()['uuid']
-    manager = r.json()['managedBy']
+    rj = r.json()
+    if len(rj) > 1:
+        raise MultipleMachinesFound('More than one machine matched search')
+    m = rj[0]
+    uuid = m['uuid']
+    manager = m['managedBy']
     boot_url = urllib.parse.urljoin(manager, f'/v1/machines/{uuid}/boot-installer')
     r = requests.post(boot_url, json={'ssh_pub_key': ssh_pub_key})
     if r.status_code != 200:
