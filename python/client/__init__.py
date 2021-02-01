@@ -52,8 +52,10 @@ def boot_installer(machine, ssh_pub_key):
     elif r.status_code != 200:
         raise UnknownError(f'The machine service returned {r.status_code}')
     rj = r.json()
+    if len(rj) == 0:
+        raise NoMachineFound('No machine matched the search')
     if len(rj) > 1:
-        raise MultipleMachinesFound('More than one machine matched search')
+        raise MultipleMachinesFound('More than one machine matched the search')
     m = rj[0]
     uuid = m['uuid']
     manager = m['managedBy']
