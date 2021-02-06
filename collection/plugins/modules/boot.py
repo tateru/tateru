@@ -67,7 +67,10 @@ def run_module():
     if module.check_mode:
         module.exit_json(**result)
 
-    tateru.client.boot_installer(module.params['machine'], module.params['ssh_pub_key'])
+    try:
+        tateru.client.boot_installer(module.params['machine'], module.params['ssh_pub_key'])
+    except tateru.client.Error as e:
+        module.fail_json(msg=str(e), **result)
 
     module.exit_json(**result)
 

@@ -35,6 +35,10 @@ class MultipleMachinesFound(Error):
     """Multiple machines where found matching the given alias."""
 
 
+class UnknownError(Error):
+    """Some unknown error happened."""
+
+
 def _machine_service():
     # TODO: Surface this through other means as well?
     svc = os.environ.get('TATERU_SVC')
