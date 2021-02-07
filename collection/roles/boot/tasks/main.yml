@@ -47,3 +47,4 @@
     # TODO: Change to tateru
     ansible_user: 'root'
     ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+    ansible_python_interpreter: auto_silent
