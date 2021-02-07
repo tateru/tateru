@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
-  version: 0.0.3
+  version: 0.0.4
   title: Tateru Machine Service API
   license:
     name: Apache 2.0
@@ -127,6 +127,18 @@ components:
           type: string
           description: Address of the installer if known (populated by installer-callback)
           example: '2001:db8::1234'
+        sshPorts:
+          $ref: '#/components/schemas/SSHPorts'
+    SSHPorts:
+      type: object
+      required:
+        - installer
+      properties:
+        installer:
+          type: integer
+          minimum: 1
+          maximum: 65535
+          example: 22
     CallbackResponse:
       type: object
       required:

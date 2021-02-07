@@ -182,7 +182,7 @@
     <div class="app-desc">The Tateru Machine Service is a repository of machine metadata and manager routing information.</div>
     <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
     <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
-    <div class="app-desc">Version: 0.0.3</div>
+    <div class="app-desc">Version: 0.0.4</div>
     
     <div class="license-info">Apache 2.0</div>
     <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0.html</div>
@@ -299,7 +299,10 @@ and address to be reached at. It will be provided with an SSH public key to allo
   "managedBy" : "http://tateru-vsphere.corp.local:7707/",
   "name" : "VMLNX01",
   "assetTag" : "00203",
-  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "sshPorts" : {
+    "installer" : 22
+  }
 }</code></pre>
 
     <h3 class="field-label">Produces</h3>
@@ -353,7 +356,10 @@ and address to be reached at. It will be provided with an SSH public key to allo
   "managedBy" : "http://tateru-vsphere.corp.local:7707/",
   "name" : "VMLNX01",
   "assetTag" : "00203",
-  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "sshPorts" : {
+    "installer" : 22
+  }
 }</code></pre>
 
     <h3 class="field-label">Produces</h3>
@@ -406,14 +412,20 @@ and address to be reached at. It will be provided with an SSH public key to allo
   "managedBy" : "http://tateru-vsphere.corp.local:7707/",
   "name" : "VMLNX01",
   "assetTag" : "00203",
-  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "sshPorts" : {
+    "installer" : 22
+  }
 }, {
   "serialNumber" : "XYZ1234",
   "installerAddress" : "2001:db8::1234",
   "managedBy" : "http://tateru-vsphere.corp.local:7707/",
   "name" : "VMLNX01",
   "assetTag" : "00203",
-  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  "uuid" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "sshPorts" : {
+    "installer" : 22
+  }
 } ]</code></pre>
 
     <h3 class="field-label">Produces</h3>
@@ -437,6 +449,7 @@ and address to be reached at. It will be provided with an SSH public key to allo
   <ol>
     <li><a href="#CallbackResponse"><code>CallbackResponse</code></a></li>
     <li><a href="#Machine"><code>Machine</code></a></li>
+    <li><a href="#SSHPorts"><code>SSHPorts</code></a></li>
     <li><a href="#body"><code>body</code></a></li>
   </ol>
 
@@ -464,6 +477,15 @@ and address to be reached at. It will be provided with an SSH public key to allo
           <div class="param-desc"><span class="param-type">example: http://tateru-vsphere.corp.local:7707/</span></div>
 <div class="param">installerAddress (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> Address of the installer if known (populated by installer-callback) </div>
           <div class="param-desc"><span class="param-type">example: 2001:db8::1234</span></div>
+<div class="param">sshPorts (optional)</div><div class="param-desc"><span class="param-type"><a href="#SSHPorts">SSHPorts</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="SSHPorts"><code>SSHPorts</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">installer </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+          <div class="param-desc"><span class="param-type">example: 22</span></div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
