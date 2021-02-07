@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
-  version: 0.0.2
+  version: 0.0.3
   title: Tateru Machine Service API
   license:
     name: Apache 2.0
@@ -19,13 +19,13 @@ paths:
       summary: fetches all known machines
       operationId: fetchMachines
       description: |
-        Returns all currently active machine objects
+        Returns all currently active machine objects.
       parameters:
-      - name: alias
-        in: query
-        description: 'Filter on known aliases for machines (e.g. name)'
-        schema:
-          type: string
+        - name: alias
+          in: query
+          description: Filter on known aliases for machines (e.g. name)
+          schema:
+            type: string
       responses:
         '200':
           description: list of machine objects
@@ -35,7 +35,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Machine'
-  /v1/installer-callback:
+  '/v1/machines/{uuid}':
+    get:
+      tags:
+        - inventory
+        - deploy
+      summary: fetch a known machine
+      operationId: fetchMachine
+      description: |
+        Returns one specific active machine object.
+      parameters:
+        - name: uuid
+          in: path
+          description: The machine UUID to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: list of machine objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Machine'
+        '404':
+          description: the requested machine was not found
+  '/v1/machines/{uuid}/installer-callback':
     post:
       tags:
         - deploy
@@ -44,15 +69,19 @@ paths:
       description: |
         When the Tateru installation software has booted it will call this endpoint to provide inventory
         and address to be reached at. It will be provided with an SSH public key to allow as response.
+      parameters:
+        - name: uuid
+          in: path
+          description: The machine UUID the installer is running on
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                uuid:
-                  type: string
-                  example: d290f1ee-6c54-4b01-90e6-d701748f0851
                 serialNumber:
                   type: string
                   example: XYZ1234
@@ -60,19 +89,16 @@ paths:
                   type: string
                   example: '00203'
               required:
-              - uuid
+                - uuid
       responses:
         '200':
           description: the request succeeded
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CallbackResponse'
+                $ref: '#/components/schemas/CallbackResponse'
         '404':
           description: the requested machine was not found
-
 components:
   schemas:
     Machine:
@@ -95,7 +121,12 @@ components:
           example: VMLNX01
         managedBy:
           type: string
+          description: URL of the manager that is the source of this machine record
           example: 'http://tateru-vsphere.corp.local:7707/'
+        installerAddress:
+          type: string
+          description: Address of the installer if known (populated by installer-callback)
+          example: '2001:db8::1234'
     CallbackResponse:
       type: object
       required:
@@ -103,5 +134,4 @@ components:
       properties:
         ssh_pub_key:
           type: string
-          format: uuid
           example: 'ssh-ed25519 AAA[..]AAV user@laptop'
