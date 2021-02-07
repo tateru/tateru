@@ -43,16 +43,16 @@ def _machine_service():
     # TODO: Surface this through other means as well?
     svc = os.environ.get('TATERU_SVC')
     if svc is None:
-        raise NoTateruMachineService()
+        raise NoTateruMachineService('No Tateru Machine Service was found, do you need to set TATERU_SVC?')
     return svc
 
 
-def boot_installer(machine, ssh_pub_key):
+def find_machine(machine):
     svc = _machine_service()
     lookup_url = urllib.parse.urljoin(svc, '/v1/machines')
     r = requests.get(lookup_url, params={'alias': machine})
     if r.status_code == 404:
-        raise NoMachineFound()
+        raise NoMachineFound('No machine matched the given alias')
     elif r.status_code != 200:
         raise UnknownError(f'The machine service returned {r.status_code}')
     rj = r.json()
@@ -60,12 +60,31 @@ def boot_installer(machine, ssh_pub_key):
         raise NoMachineFound('No machine matched the search')
     if len(rj) > 1:
         raise MultipleMachinesFound('More than one machine matched the search')
-    m = rj[0]
-    uuid = m['uuid']
-    manager = m['managedBy']
+    return rj[0]
+
+
+def boot_installer(uuid, ssh_pub_key):
+    svc = _machine_service()
+    lookup_url = urllib.parse.urljoin(svc, f'/v1/machines/{uuid}')
+    r = requests.get(lookup_url)
+    if r.status_code == 404:
+        raise NoMachineFound('No machine was found matching given UUID')
+    elif r.status_code != 200:
+        raise UnknownError(f'The machine service returned {r.status_code}')
+    manager = r.json()['managedBy']
     boot_url = urllib.parse.urljoin(manager, f'/v1/machines/{uuid}/boot-installer')
     r = requests.post(boot_url, json={'ssh_pub_key': ssh_pub_key})
     if r.status_code != 200:
         raise UnknownError(f'The boot-installer request returned {r.status_code}')
-    return None
+
+
+def get_machine(uuid):
+    svc = _machine_service()
+    lookup_url = urllib.parse.urljoin(svc, f'/v1/machines/{uuid}')
+    r = requests.get(lookup_url)
+    if r.status_code == 404:
+        raise NoMachineFound('No machine was found matching given UUID')
+    elif r.status_code != 200:
+        raise UnknownError(f'The machine service returned {r.status_code}')
+    return r.json()
 

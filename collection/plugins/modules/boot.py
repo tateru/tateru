@@ -68,7 +68,8 @@ def run_module():
         module.exit_json(**result)
 
     try:
-        tateru.client.boot_installer(module.params['machine'], module.params['ssh_pub_key'])
+        m = tateru.client.find_machine(module.params['machine'])
+        tateru.client.boot_installer(m['uuid'], module.params['ssh_pub_key'])
     except tateru.client.Error as e:
         module.fail_json(msg=str(e), **result)
 

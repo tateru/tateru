@@ -56,6 +56,7 @@ port:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+import tateru.client
 import time
 
 
@@ -77,8 +78,13 @@ def run_module():
     if module.check_mode:
         module.exit_json(**result)
 
-    result['address'] = 'localhost'
-    result['port'] = 5555
+    try:
+        m = tateru.client.find_machine(module.params['machine'])
+        result['address'] = m['installerAddress']
+        result['port'] = m['sshPorts']['installer']
+    except tateru.client.Error as e:
+        module.fail_json(msg=str(e), **result)
+
     # TODO: Fake wait to demo flow
     time.sleep(3)
     module.exit_json(**result)

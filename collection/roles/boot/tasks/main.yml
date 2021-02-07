@@ -46,4 +46,4 @@
     ansible_port: '{{ installer_address["port"] }}'
     # TODO: Change to tateru
     ansible_user: 'root'
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
