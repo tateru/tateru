@@ -14,6 +14,37 @@ as well as OS re-deployment on failure or repurposing based on Ansible.
  * Support common server Linux distributions initially, grow as needed.
  * Be reasonably opinionated, but do not interfere too much with existing infrastructure.
 
+## Feature Comparison
+
+✔️ Available
+📝 Planned
+❌ No
+❓  Unknown
+
+|                           | Tateru	             | FAI	                | MAAS                |
+|---------------------------|---------------------|---------------------|---------------------|
+| **-- Architecture --**
+| Machine ID                |	UUID	               | MAC	                | UUID
+| Minimum memory limit	     | 2 GiB               |	❓                  |	❓
+| Inventory integration	    | Netbox              | ❌                 | ❌
+| Inventory matching	       | Serial Number,<br>Asset Tag,<br>UUID |	MAC |	MAC
+| MAC address agnostic	|✔️|❌|❌
+| Btw, uses Arch	|✔️|❌|❌
+| **-- Features --**
+| Modern hardware support	|✔️|❌|✔️
+| IPv6 support	|✔️|❌|✔️
+| EFI support	|✔️|✔️|✔️
+| ARM64 support	|📝|❓|✔️
+| Firmware updates |📝|❌|✔️
+| Hardware configuraiton (RAID, ..)	|📝|❌|✔️
+| **-- Providers --** |
+| Unmanaged bare-metal	|✔️|✔️| Netboot only
+| Proxmox |✔️|❌|❌
+| VMware vSphere |✔️|❌|❌
+| VM images |❌|✔️|✔️
+| OpenStack |📝|❌|❌
+| Redfish |📝|❌|❌
+
 ## Scope
 
 The project is meant for environments where the following is true:
