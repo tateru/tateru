@@ -11,7 +11,7 @@ installation playbooks to install bare-metal or virtual machines.
 
  * Create a system for handling the server lifecycle related to initial OS deployment
 as well as OS re-deployment on failure or repurposing based on Ansible.
- * Support common server Linux distributions initially, grow as needed.
+ * Support common server Linux distributions officially, but allow for community to add support for more.
  * Be reasonably opinionated, but do not interfere too much with existing infrastructure.
 
 ## Feature Comparison
@@ -49,7 +49,7 @@ as well as OS re-deployment on failure or repurposing based on Ansible.
 
 The project is meant for environments where the following is true:
 
- * Machines with minimum of 1 GiB memory
+ * Machines with minimum of 2 GiB memory
  * Support for multiple architectures is needed
  * Integration with BMCs and common management systems (e.g. Redfish / vSphere / Netbox / Static YAML files).
  * DHCPv4 or DHCPv6 is available for all machines
