@@ -1,0 +1,50 @@
+@startuml
+' Render using http://www.plantuml.com/plantuml/
+title Installer Boot-up
+actor CLI
+database MachineService
+participant Manager
+participant FooAPI #cccccc
+participant Installer
+participant "PXE+DHCP"
+
+CLI->MachineService: POST /v1/machines/{uuid}/boot-installer
+activate MachineService #FFBBBB
+
+MachineService->Manager: POST /v1/machines/{uuid}/boot-installer
+activate Manager #FF8888
+
+note right
+  FooAPI is hardware/manager dependent
+  and could be e.g. Redfish or vCenter
+end note
+Manager->FooAPI: //OpFoo//
+Manager->FooAPI: //OpBar//
+Manager->FooAPI: //....//
+Manager->FooAPI: //Reboot//
+FooAPI --[#888888]//o Installer
+
+activate Installer #FFEEEE
+note right of Installer : Machine is booted
+
+Manager->MachineService: 200 OK
+deactivate Manager
+
+Installer->"PXE+DHCP": DHCP lease request
+"PXE+DHCP"->Installer: Lease + iPXE w/ Callback URL
+
+activate Installer #FFAAAA
+note right of Installer : Tateru Installer running
+
+Installer->MachineService: Register ephemeral IP
+MachineService->Installer: Retrieve SSH pubkey
+MachineService->CLI: 200 OK
+deactivate MachineService
+
+CLI->MachineService: GET /v1/machines/{uuid}
+activate MachineService
+MachineService->CLI:Ephemeral IP
+deactivate MachineService
+
+CLI->Installer: Execute playbook
+@enduml
