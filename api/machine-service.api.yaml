@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
-  version: 0.0.5
+  version: 0.0.6
   title: Tateru Machine Service API
   license:
     name: Apache 2.0
@@ -60,12 +60,38 @@ paths:
                 $ref: '#/components/schemas/Machine'
         '404':
           description: the requested machine was not found
+  '/v1/machines/{uuid}/boot-installer':
+    post:
+      tags:
+        - deploy
+      summary: makes a machine boot into the Tateru installer environment
+      operationId: bootInstaller
+      description: |
+        Calling this action will cause a machine to boot into the Tateru installer
+        environment, possibly by reconfiguring bootup order and doing a network boot.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BootInstallerRequest'
+      parameters:
+        - name: uuid
+          in: path
+          description: The machine UUID to boot the installer on
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the request succeeded
+        '404':
+          description: the requested machine was not found
   '/v1/machines/{uuid}/installer-callback':
     post:
       tags:
         - deploy
       summary: send an installation callback to notify Tateru that an installer has booted
-      operationId: bootInstaller
+      operationId: installerCallback
       description: |
         When the Tateru installation software has booted it will call this endpoint to provide inventory
         and address to be reached at. It will be provided with an SSH public key to allow as response.
@@ -151,3 +177,17 @@ components:
         ssh_pub_key:
           type: string
           example: 'ssh-ed25519 AAA[..]AAV user@laptop'
+    BootInstallerRequest:
+      type: object
+      properties:
+        nonce:
+          description: An arbitary string that is used to offer idempotency.
+          type: string
+          example: 'd290f1ff-6c54-4b01-90e6-d723748f0851'
+        ssh_pub_key:
+          description: The SSH public key to allow SSH access to the installer environment
+          type: string
+          example: 'ssh-ed25519 AAA[..]AAV user@laptop'
+      required:
+        - ssh_pub_key
+        - nonce

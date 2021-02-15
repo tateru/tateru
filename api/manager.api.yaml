@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: A Tateru Manager is used to communicate with a machine manager to extract inventory and configure boot devices
-  version: 0.0.2
+  version: 0.0.3
   title: Tateru Manager API
   license:
     name: Apache 2.0
@@ -29,7 +29,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Machine'
-  /v1/machines/{uuid}/boot-installer:
+  '/v1/machines/{uuid}/boot-installer':
     post:
       tags:
         - deploy
@@ -42,21 +42,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ssh_pub_key:
-                  description: 'The SSH public key to allow SSH access to the installer environment'
-                  type: string
-                  example: 'ssh-ed25519 AAA[..]AAV user@laptop'
-              required:
-              - ssh_pub_key
+              $ref: '#/components/schemas/BootInstallerRequest'
       parameters:
-      - name: 'uuid'
-        in: 'path'
-        description: 'The machine UUID to boot the installer on'
-        required: true
-        schema:
-          type: 'string'
+        - name: uuid
+          in: path
+          description: The machine UUID to boot the installer on
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: the request succeeded
@@ -82,3 +75,12 @@ components:
         name:
           type: string
           example: VMLNX01
+    BootInstallerRequest:
+      type: object
+      properties:
+        nonce:
+          description: An arbitary string that is used to offer idempotency.
+          type: string
+          example: 'd290f1ff-6c54-4b01-90e6-d723748f0851'
+      required:
+        - nonce
