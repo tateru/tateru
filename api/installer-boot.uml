@@ -27,23 +27,28 @@ FooAPI --[#888888]//o Installer
 activate Installer #FFEEEE
 note right of Installer : Machine is booted
 
-Manager->MachineService: 200 OK
+Manager-->MachineService: 200 OK
 deactivate Manager
 
 Installer->"PXE+DHCP": DHCP lease request
-"PXE+DHCP"->Installer: Lease + iPXE w/ Callback URL
+activate "PXE+DHCP" #FFCCCC
+"PXE+DHCP"-->Installer: Lease + iPXE w/ Callback URL
+deactivate "PXE+DHCP" #FFCCCC
 
 activate Installer #FFAAAA
 note right of Installer : Tateru Installer running
 
 Installer->MachineService: Register ephemeral IP
-MachineService->Installer: Retrieve SSH pubkey
-MachineService->CLI: 200 OK
+activate MachineService #FFEEEE
+MachineService-->Installer: Retrieve SSH pubkey
+deactivate MachineService #FFEEEE
+
+MachineService-->CLI: 200 OK
 deactivate MachineService
 
 CLI->MachineService: GET /v1/machines/{uuid}
 activate MachineService
-MachineService->CLI:Ephemeral IP
+MachineService-->CLI:Ephemeral IP
 deactivate MachineService
 
 CLI->Installer: Execute playbook
