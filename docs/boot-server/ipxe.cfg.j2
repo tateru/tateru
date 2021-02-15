@@ -4,12 +4,12 @@ cpair --foreground 6 --background 9 1
 cpair --foreground 7 --background 9 2
 cpair --foreground 6 --background 9 3
 
-console --picture http://{{ inventory_hostname }}/tateru/ipxe.png
+console --picture {{ TATERU_BOOT_URL }}/tateru/ipxe.png
 
 set ipparam BOOTIF=${netX/mac} ip=${ip}::${gateway}:${netmask}
 set kp initrd=amd-ucode.img initrd=intel-ucode.img initrd=initramfs-linux.img
 set kp ${kp} loglevel=3 cow_spacesize=768M archisobasedir=arch
-set kp ${kp} archiso_http_srv=http://{{ inventory_hostname }}/tateru/ verify=n
+set kp ${kp} archiso_http_srv={{ TATERU_BOOT_URL }}/tateru/ verify=n
 set kp ${kp} ${ipparam} copytoram_size="400M" svc={{ TATERU_SVC }}
 
 :menu
@@ -36,9 +36,9 @@ set kp ${kp} ${ipparam} copytoram_size="400M" svc={{ TATERU_SVC }}
   exit
 
 :installer
-  initrd http://{{ inventory_hostname }}/tateru/arch/boot/intel-ucode.img
-  initrd http://{{ inventory_hostname }}/tateru/arch/boot/amd-ucode.img
-  initrd http://{{ inventory_hostname }}/tateru/arch/boot/x86_64/initramfs-linux.img
-  kernel http://{{ inventory_hostname }}/tateru/arch/boot/x86_64/vmlinuz-linux ${kp}
+  initrd {{ TATERU_BOOT_URL }}/tateru/arch/boot/intel-ucode.img
+  initrd {{ TATERU_BOOT_URL }}/tateru/arch/boot/amd-ucode.img
+  initrd {{ TATERU_BOOT_URL }}/tateru/arch/boot/x86_64/initramfs-linux.img
+  kernel {{ TATERU_BOOT_URL }}/tateru/arch/boot/x86_64/vmlinuz-linux ${kp}
   echo Booting...
   boot || goto failed

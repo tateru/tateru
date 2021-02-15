@@ -27,6 +27,16 @@
       msg: "Variable TATERU_ISO needs to be set to the path of the Tateru installer ISO"
     when: TATERU_ISO is not defined
     failed_when: TATERU_ISO is not defined
+  - name: Verify that TATERU_SVC is set
+    debug:
+      msg: "Variable TATERU_SVC needs to be set to the URL of the Tateru machine service (e.g. http://[2001:db8::1234]:7865)"
+    when: TATERU_SVC is not defined
+    failed_when: TATERU_SVC is not defined
+  - name: Verify that TATERU_BOOT_URL is set
+    debug:
+      msg: "Variable TATERU_BOOT_URL needs to be set to the URL to reach the Tateru boot server being provisioned (e.g. http://[2001:db8::8888])"
+    when: TATERU_BOOT_URL is not defined
+    failed_when: TATERU_BOOT_URL is not defined
   - name: Verify that the target OS is supported
     debug:
       msg: "The target OS distribution {{ ansible_distribution }} is not supported"
@@ -117,5 +127,5 @@
       dest: /srv/tftp/tateru/ipxe.png
   - name: Everything is complete
     debug:
-      msg: "You should be able to test access to the boot server by doing: curl http://{{ inventory_hostname }}/tateru/arch/x86_64/airootfs.sha512"
+      msg: "You should be able to test access to the boot server by doing: curl {{ TATERU_BOOT_URL }}/tateru/arch/x86_64/airootfs.sha512"
 
