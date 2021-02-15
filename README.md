@@ -29,7 +29,7 @@ as well as OS re-deployment on failure or repurposing based on Ansible.
 | Inventory integration	    | Netbox              | ❌                 | ❌
 | Inventory matching	       | Serial Number,<br>Asset Tag,<br>UUID |	MAC |	MAC
 | MAC address agnostic	|✔️|❌|❌
-| Btw, uses Arch	|✔️|❌|❌
+| Btw, uses Arch\[[?](https://www.quora.com/What-is-meant-by-btw-I-use-arch)\]	|✔️|❌|❌
 | **-- Features --**
 | Modern hardware support	|✔️|❌|✔️
 | IPv6 support	|✔️|❌|✔️
