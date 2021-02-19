@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: The Tateru Machine Service is a repository of machine metadata and manager routing information.
-  version: 0.0.6
+  version: 0.0.7
   title: Tateru Machine Service API
   license:
     name: Apache 2.0
@@ -86,6 +86,10 @@ paths:
           description: the request succeeded
         '404':
           description: the requested machine was not found
+        '409':
+          description: the requested machine is already subject to another operation
+        '500':
+          description: the request failed
   '/v1/machines/{uuid}/installer-callback':
     post:
       tags:

@@ -182,7 +182,7 @@
     <div class="app-desc">A Tateru Manager is used to communicate with a machine manager to extract inventory and configure boot devices</div>
     <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
     <div class="app-desc">Contact Info: <a href="hello@helloreverb.com">hello@helloreverb.com</a></div>
-    <div class="app-desc">Version: 0.0.3</div>
+    <div class="app-desc">Version: 0.0.4</div>
     
     <div class="license-info">Apache 2.0</div>
     <div class="license-url">http://www.apache.org/licenses/LICENSE-2.0.html</div>
@@ -244,6 +244,12 @@ environment, possibly by reconfiguring bootup order and doing a network boot.</d
         <a href="#"></a>
     <h4 class="field-label">404</h4>
     the requested machine was not found
+        <a href="#"></a>
+    <h4 class="field-label">409</h4>
+    the requested machine is already subject to another operation
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    the request failed
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
