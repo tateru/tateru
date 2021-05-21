@@ -37,6 +37,8 @@ as well as OS re-deployment on failure or repurposing based on Ansible.
 | ARM64 support	|📝|❓|✔️
 | Firmware updates |📝|❌|✔️
 | Hardware configuraiton (RAID, ..)	|📝|❌|✔️
+| TCG SSC OPAL 2.0 (SED)	|📝|❌|❌
+| TPM 2.0	|📝|❌|❌
 | **-- Providers --** |
 | Unmanaged bare-metal	|✔️|✔️| Netboot only
 | Proxmox |✔️|❌|❌
