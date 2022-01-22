@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: A Tateru Manager is used to communicate with a machine manager to extract inventory and configure boot devices
-  version: 0.0.3
+  version: 0.0.4
   title: Tateru Manager API
   license:
     name: Apache 2.0
@@ -55,6 +55,10 @@ paths:
           description: the request succeeded
         '404':
           description: the requested machine was not found
+        '409':
+          description: the requested machine is already subject to another operation
+        '500':
+          description: the request failed
 components:
   schemas:
     Machine:
