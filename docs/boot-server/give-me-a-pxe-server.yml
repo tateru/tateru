@@ -1,0 +1,131 @@
+# Playbook to install PXE server for Tateru boot
+#
+# Copyright 2021 Tateru Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- hosts: all
+  vars:
+    pkgs:
+      Debian:
+        - libarchive-tools
+        - tftpd-hpa
+        - lighttpd
+  tasks:
+  - name: Verify that TATERU_ISO is set
+    debug:
+      msg: "Variable TATERU_ISO needs to be set to the path of the Tateru installer ISO"
+    when: TATERU_ISO is not defined
+    failed_when: TATERU_ISO is not defined
+  - name: Verify that TATERU_SVC is set
+    debug:
+      msg: "Variable TATERU_SVC needs to be set to the URL of the Tateru machine service (e.g. http://[2001:db8::1234]:7865)"
+    when: TATERU_SVC is not defined
+    failed_when: TATERU_SVC is not defined
+  - name: Verify that TATERU_BOOT_URL is set
+    debug:
+      msg: "Variable TATERU_BOOT_URL needs to be set to the URL to reach the Tateru boot server being provisioned (e.g. http://[2001:db8::8888])"
+    when: TATERU_BOOT_URL is not defined
+    failed_when: TATERU_BOOT_URL is not defined
+  - name: Verify that the target OS is supported
+    debug:
+      msg: "The target OS distribution {{ ansible_distribution }} is not supported"
+    when: pkgs[ansible_distribution] is not defined
+    failed_when: pkgs[ansible_distribution] is not defined
+  - name: Copy Tateru installation ISO to target
+    become: true
+    ansible.builtin.copy:
+      src: "{{ TATERU_ISO }}"
+      dest: "/opt/tateru_installer.iso"
+      owner: root
+      group: root
+      mode: "0644"
+    register: copy_iso
+  - name: Install required packages
+    become: true
+    ansible.builtin.package:
+      name: "{{ pkgs[ansible_distribution] }}"
+      state: present
+  - name: Download BIOS iPXE to TFTP root
+    become: true
+    ansible.builtin.get_url:
+      url: https://github.com/tateru/tateru-ipxe/releases/download/v1.21.1/undionly.kpxe
+      dest: /srv/tftp/undionly.kpxe
+      checksum: sha256:be7b8dc435bb31168ee9b3064f9e64f4f5234249d178e27a438a8e5137c52bfb
+  - name: Download UEFI iPXE to TFTP root
+    become: true
+    ansible.builtin.get_url:
+      url: https://github.com/tateru/tateru-ipxe/releases/download/v1.21.1/ipxe.x86_64.efi
+      dest: /srv/tftp/ipxe.x86_64.efi
+      checksum: sha256:4d4cfd204a792d07695f3cd9c5e9c4c5e53a53c36d85d7ee36ae0e27629c3518
+  - name: Ensure that TFTPd is running
+    become: true
+    ansible.builtin.service:
+      name: tftpd-hpa
+      state: started
+  - name: Configure lighttpd to export Tateru boot files
+    become: true
+    ansible.builtin.copy:
+      content: 'alias.url = ( "/tateru/" => "/srv/tftp/tateru/" )'
+      dest: /etc/lighttpd/conf-enabled/50-tateru.conf
+      owner: root
+      group: root
+      mode: "0644"
+    register: conf_lighttpd
+  - name: Reload lighttpd to apply new configuration
+    become: true
+    ansible.builtin.service:
+      name: lighttpd
+      state: reloaded
+    when: conf_lighttpd.changed
+  - name: Copy Tateru HTTP index page
+    become: true
+    ansible.builtin.copy:
+      src: index.html
+      dest: /var/www/html/
+  - name: Ensure that lighttpd is running
+    become: true
+    ansible.builtin.service:
+      name: lighttpd
+      state: started
+  - name: Create Tateru boot files directory
+    become: true
+    ansible.builtin.file:
+      dest: /srv/tftp/tateru
+      state: directory
+      owner: root
+      group: root
+      mode: "0555"
+    register: boot_dir
+  - name: Generate Tateru iPXE configuration
+    become: true
+    ansible.builtin.template:
+      src: ipxe.cfg.j2
+      dest: /srv/tftp/tateru/ipxe.cfg
+      owner: root
+      group: root
+      mode: "0644"
+  - name: Extract installation
+    become: true
+    ansible.builtin.shell:
+      cmd: bsdtar xf /opt/tateru_installer.iso -C /srv/tftp/tateru/
+    when: copy_iso.changed or boot_dir.changed
+  - name: Copy Tateru iPXE splash screen
+    become: true
+    ansible.builtin.copy:
+      src: ipxe.png
+      dest: /srv/tftp/tateru/ipxe.png
+  - name: Everything is complete
+    debug:
+      msg: "You should be able to test access to the boot server by doing: curl {{ TATERU_BOOT_URL }}/tateru/arch/x86_64/airootfs.sha512"
+
